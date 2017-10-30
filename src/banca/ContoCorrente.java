@@ -1,4 +1,5 @@
 package banca;
+
 import java.util.Date;
 
 public class ContoCorrente {
@@ -25,7 +26,7 @@ public class ContoCorrente {
     public String getId() {
         return id;
     }
-    
+
     public double getSaldo() {
         return saldo;
     }
@@ -38,11 +39,9 @@ public class ContoCorrente {
         return importoUM;
     }
 
-    
-    
     public double versamento() {
         double importo = Banca.reqImporto();
-        this.dataUM=Banca.reqData();
+        this.dataUM = Banca.reqData();
         if (controlloImporto(importo, true)) {
             this.importoUM = importo;
             this.saldo += importo;
@@ -52,6 +51,7 @@ public class ContoCorrente {
         }
         return -1;
     }
+
     public double versamento(double importo, Date data) {
         this.importoUM = importo;
         this.dataUM = data;
@@ -59,9 +59,10 @@ public class ContoCorrente {
         return saldo;
 
     }
+
     public double prelevamento() {
         double importo = Banca.reqImporto();
-        this.dataUM=Banca.reqData();
+        this.dataUM = Banca.reqData();
         if (controlloImporto(Banca.reqImporto(), false)) {
             this.importoUM = importo;
             this.saldo -= importo;
@@ -71,6 +72,7 @@ public class ContoCorrente {
         }
         return -1;
     }
+
     public double prelevamento(double importo, Date data) {
         this.importoUM = importo;
         this.dataUM = data;
