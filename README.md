@@ -1,2 +1,0 @@
-# Banca
-Banca+ContoCorrente
