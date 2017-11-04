@@ -27,17 +27,21 @@
 *you a DONKEY dick. Fix the problem yourself. A non-dick would submit the fix back.
  */
 package banca;
+
 import java.util.Date;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
+
 /**
  *
  * @author Alex
  */
 public class Banca {
+
     public static String reqId() {
         String id;
         id = "0";
@@ -57,9 +61,11 @@ public class Banca {
                 System.err.println("Errore nell'inserimento! ");
                 done = false;
             }
+
         } while (!done);
         return id;
     }
+
     public static double reqImporto() {
         double importo = 0;
         boolean done;
@@ -81,50 +87,134 @@ public class Banca {
         } while (!done);
         return importo;
     }
+
     public static void stampaTutto(ContoCorrente c) {
+        DecimalFormat money = new DecimalFormat("#,00");
         DateFormat def = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        System.out.println("------------------------------------------"); // un po di formattazione dai
         System.out.println("Id Conto: " + c.getId());
         System.out.println("Saldo conto: " + c.getSaldo());
-        System.out.println("Importo ultimo movimento: " + c.getImportoUM());
+        System.out.println("Importo ultimo movimento: " +c.getImportoUM());
         System.out.println("Data ultimo movimento: " + def.format(c.getDataUM()));
+        System.out.println("------------------------------------------"); // un po di formattazione dai
     }
+
     public static Date reqData() {
         Date data = new Date();
         return data;
     }
+
+    public static void stampaTutto(ContoConFido c) {
+        DecimalFormat money = new DecimalFormat("#,00");
+        DateFormat def = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        System.out.println("------------------------------------------"); // un po di formattazione dai
+        System.out.println("Id Conto: " + c.getId());
+        System.out.println("Fido: " + c.getFido());
+        System.out.println("Saldo conto: " + c.getSaldo());
+        if (c.getSaldo() < 0) {
+            System.out.println("Attenzione, sei in debito con la banca!");
+        }
+        System.out.println("Importo ultimo movimento: " + c.getImportoUM());
+        System.out.println("Data ultimo movimento: " + def.format(c.getDataUM()));
+        System.out.println("------------------------------------------"); // un po di formattazione dai
+    }
+
     public static void main(String[] args) {
         // 
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader tastiera = new BufferedReader(input);
         //    
-        ContoCorrente c1, c2;
-        String id;
-        double risultato;
-        System.out.println("-----Conto 1----");
-        c1 = new ContoCorrente();
-        System.out.println("-----Conto 2----");
-        c2 = new ContoCorrente(Banca.reqId());
+        ContoCorrente c1;
+        ContoConFido c2;
+        int operazione;
+        boolean done = false;
+        System.out.println("Conto 1:");
+        c1 = new ContoCorrente(Banca.reqId());
         do {
-            System.out.println("Importo da versare nel conto 1!");
-            risultato = c1.versamento();
-        } while (risultato == -1);
+            try {
+                System.out.println("Inserisci il tipo di operazione che vuoi fare con il conto 1!");
+                System.out.println("Inserisci 1 per effettuare un versamento;");
+                System.out.println("Inserisci 2 per effettuare un prelevamento;");
+                System.out.println("Inserisci 3 per uscire e visualizzare un riepilogo;");
+                operazione = Integer.valueOf(tastiera.readLine());
+                if (operazione <= 0 || operazione >= 4) {
+                    throw new Exception();
+                }
+
+            } catch (Exception e) {
+                System.err.println("Errore nell'inserimento dell'operazione!");
+                done = false;
+                continue;
+            }
+            switch (operazione) {
+                case 1:         //VERSAMENTO
+                    System.out.println("Hai scelto il versamento!");
+                    c1.versamento(Banca.reqImporto(), Banca.reqData());
+                    done = false;
+                    break;
+                case 2:         //PRELEVAMENTO
+                    System.out.println("Hai scelto il prelevamento!");
+                    c1.prelevamento(Banca.reqImporto(), Banca.reqData());
+                    done = false;
+                    break;
+                case 3:
+                    System.out.println("Riepilogo:");
+                    Banca.stampaTutto(c1);
+                    done = true;
+                    break;
+                default:
+                    System.out.println("Errore, io non dovrei spuntare! (default cc)");
+                    done = false;
+                    break;
+            }
+        } while (!done);
+        System.out.println("Conto 2:");
+        c2 = new ContoConFido(Banca.reqId());
+        //Stessa cosa ma leggermente riadattata al fido
         do {
-            System.out.println("Importo da versare nel conto 2");
-            risultato = c2.versamento();
-        } while (risultato == -1);
-        do {
-            System.out.println("Importo da prelevare dal conto 1");
-            risultato = c1.prelevamento();
-        } while (risultato == -1);
-        do {
-            System.out.println("Importo da prelevare dal conto 2");
-            risultato = c2.prelevamento();
-        } while (risultato == -1);
-        do {
-            System.out.println("Importo da versare nel conto 1");
-            risultato = c1.versamento();
-        } while (risultato == -1);
-        stampaTutto(c1);
-        stampaTutto(c2);
+            try {
+                System.out.println("Inserisci il tipo di operazione che vuoi fare con il conto 1!");
+                System.out.println("Inserisci 1 per impostare il fido;");
+                System.out.println("Inserisci 2 per effettuare un versamento;");
+                System.out.println("Inserisci 3 per effettuare un prelevamento;");
+                System.out.println("Inserisci 4 per uscire e visualizzare un riepilogo;");
+                operazione = Integer.valueOf(tastiera.readLine());
+                if (operazione <= 0 || operazione >= 5) {
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                System.err.println("Errore nell'inserimento dell'operazione!");
+                done = false;
+                continue;
+            }
+            switch (operazione) {
+                case 1:         //SET FIDO
+                    System.out.println("Hai scelto di impostare il fido!");
+                    c2.setFido(Banca.reqImporto());
+                    done = false;
+                    break;
+                case 2:         //VERSAMENTO
+                    System.out.println("Hai scelto il versamento!");
+                    c2.versamento(Banca.reqImporto(), Banca.reqData());
+                    done = false;
+                    break;
+                case 3:         //PRELEVAMENTO
+                    System.out.println("Hai scelto il prelevamento!");
+                    c2.prelevamento(Banca.reqImporto(), Banca.reqData());
+                    break;
+                case 4:
+                    System.out.println("Riepilogo:");
+                    Banca.stampaTutto(c2);
+                    done = true;
+                    break;
+                default:
+                    System.out.println("Errore, io non dovrei spuntare! (default cc)");
+                    done = false;
+                    break;
+            }
+        } while (!done);
+
+        //Termino senza errori
+        System.exit(0);
     }
 }
