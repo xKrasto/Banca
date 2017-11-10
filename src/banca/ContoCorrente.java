@@ -31,13 +31,21 @@ package banca;
 import java.util.Date;
 
 public class ContoCorrente {
-
+    protected Persona intestatario;
     protected String id;
     protected double saldo;
-    protected Date dataUM;
+    protected Data dataUM;
     protected double importoUM;
 
+    public Persona getIntestatario() {
+        return intestatario;
+    }
 
+    public void setIntestatario(Persona intestatario) {
+        this.intestatario = intestatario;
+    }
+
+    
     public ContoCorrente(String id) {
         this.id = id;
         this.saldo = 0;
@@ -51,7 +59,7 @@ public class ContoCorrente {
         return saldo;
     }
 
-    public Date getDataUM() {
+    public Data getDataUM() {
         return dataUM;
     }
 
@@ -59,7 +67,7 @@ public class ContoCorrente {
         return importoUM;
     }
 
-    public double versamento(double importo, Date data) {
+    public double versamento(double importo, Data data) {
         if (controlloImporto(importo, true)) {
             this.importoUM = importo;
             this.saldo += importo;
@@ -70,7 +78,7 @@ public class ContoCorrente {
         }
     }
 
-    public double prelevamento(double importo, Date data) {
+    public double prelevamento(double importo, Data data) {
         if (controlloImporto(importo, false)) {
             this.importoUM = importo;
             this.saldo -= importo;
@@ -91,4 +99,5 @@ public class ContoCorrente {
             return importo < saldo && importo > 0;
         }
     }
+    
 }

@@ -28,13 +28,9 @@
  */
 package banca;
 
-import java.util.Date;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.text.DecimalFormat;
 
 /**
  *
@@ -89,36 +85,204 @@ public class Banca {
     }
 
     public static void stampaTutto(ContoCorrente c) {
-        DecimalFormat money = new DecimalFormat("#,00");
-        DateFormat def = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         System.out.println("------------------------------------------"); // un po di formattazione dai
-        System.out.println("Id Conto: " + c.getId());
+        stampaPersona(c.getIntestatario());
+        System.out.println("\nId Conto: " + c.getId());
         System.out.println("Saldo conto: " + c.getSaldo());
-        System.out.println("Importo ultimo movimento: " +c.getImportoUM());
-        System.out.println("Data ultimo movimento: " + def.format(c.getDataUM()));
+        System.out.println("Importo ultimo movimento: " + c.getImportoUM());
+        System.out.println("Data ultimo movimento: " + c.dataUM.getGg()+"/"+c.dataUM.getMm() + "/" +c.dataUM.getAaaa());
         System.out.println("------------------------------------------"); // un po di formattazione dai
     }
 
-    public static Date reqData() {
-        Date data = new Date();
+    public static Data reqData() {
+        
+        InputStreamReader inp= new InputStreamReader(System.in);
+        BufferedReader tastiera= new BufferedReader(inp);
+        
+        boolean done=false;
+        int gg=0,mm=0,aa=0;
+        do {            
+            try {
+                System.out.print("\nInserisci il giorno: ");
+                gg=Integer.valueOf(tastiera.readLine());
+                if (gg<0 || gg >31 ) throw new IOException();
+                System.out.print("Inserisci il mese: ");
+                mm=Integer.valueOf(tastiera.readLine());
+                if (mm<0 || mm >12 ) throw new IOException();
+                System.out.print("Inserisci l'anno: ");
+                aa=Integer.valueOf(tastiera.readLine());
+                if (aa<1970 || aa >2017 ) throw new IOException();
+                done=true;
+            } catch (IOException | NumberFormatException e) {
+                System.err.println("Errore nell'inserimento");
+                done=false;
+            }
+        } while (!done);
+        
+        Data data = new Data(gg, mm, aa);
         return data;
     }
 
     public static void stampaTutto(ContoConFido c) {
-        DecimalFormat money = new DecimalFormat("#,00");
-        DateFormat def = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
         System.out.println("------------------------------------------"); // un po di formattazione dai
-        System.out.println("Id Conto: " + c.getId());
+        stampaPersona(c.getIntestatario());
+        System.out.println("\nId Conto: " + c.getId());
         System.out.println("Fido: " + c.getFido());
         System.out.println("Saldo conto: " + c.getSaldo());
         if (c.getSaldo() < 0) {
             System.out.println("Attenzione, sei in debito con la banca!");
         }
         System.out.println("Importo ultimo movimento: " + c.getImportoUM());
-        System.out.println("Data ultimo movimento: " + def.format(c.getDataUM()));
+        System.out.println("Data ultimo movimento: " + c.dataUM.getGg()+"/"+c.dataUM.getMm() + "/" +c.dataUM.getAaaa());
         System.out.println("------------------------------------------"); // un po di formattazione dai
     }
 
+
+    public static Persona reqPersona() {
+        //
+        InputStreamReader inp = new InputStreamReader(System.in);
+        BufferedReader tastiera = new BufferedReader(inp);
+        //
+        String nome;
+        nome="Non dovrei spuntare";
+        String cognome;
+        cognome="Non dovrei spuntare";
+        char sex;
+        sex='m';
+        String comuneNascita;
+        comuneNascita="Non dovrei spuntare";
+        String indirizzo;
+        indirizzo="Non dovrei spuntare";
+        String codFisc;
+        codFisc="Non dovrei spuntare";
+        String numTel;
+        numTel="Non dovrei spuntare";
+        int gg,mm,aa;
+        gg=0;
+        mm=0;     
+        aa = 0;
+        boolean done = false;
+        do {
+            try {
+                System.out.println("Inserisci il nome della persona: ");
+                nome = tastiera.readLine();
+                done = true;
+            } catch (IOException ex) {
+                System.out.println("Errore nell'inserimento!");
+                done = false;
+            }
+        } while (!done);
+
+        done = false;
+        do {
+            try {
+                System.out.println("Inserisci il cognome della persona: ");
+                cognome = tastiera.readLine();
+                done = true;
+            } catch (IOException ex) {
+                System.out.println("Errore nell'inserimento!");
+                done = false;
+            }
+        } while (!done);
+
+        done = false;
+        do {
+            try {
+                System.out.println("Inserisci il sesso della persona (M/F): ");
+                sex = tastiera.readLine().charAt(0);
+                if (Persona.checkSex(sex)) {
+                    done = true;
+                } else {
+                    throw new IOException();
+                }
+            } catch (IOException ex) {
+                System.out.println("Errore nell'inserimento!");
+                done = false;
+            }
+        } while (!done);
+        done = false;
+        do {
+            try {
+                System.out.println("Inserisci il comune di nascita: ");
+                comuneNascita = tastiera.readLine();
+                done = true;
+            } catch (IOException ex) {
+                System.out.println("Errore nell'inserimento!");
+                done = false;
+            }
+        } while (!done);
+
+        done = false;
+        do {
+            try {
+                System.out.println("Inserisci l'indirizzo di residenza: ");
+                indirizzo = tastiera.readLine();
+                done = true;
+            } catch (IOException ex) {
+                System.out.println("Errore nell'inserimento!");
+                done = false;
+            }
+        } while (!done);
+
+        done = false;
+        do {
+            try {
+                System.out.println("Inserisci il codice fiscale della persona: ");
+                codFisc = tastiera.readLine().toUpperCase();
+                done = true;
+            } catch (IOException ex) {
+                System.out.println("Errore nell'inserimento!");
+                done = false;
+            }
+        } while (!done);
+
+        done = false;
+        do {
+            try {
+                System.out.println("Inserisci il numero di Telefono: ");
+                numTel = tastiera.readLine();
+                done = true;
+            } catch (IOException ex) {
+                System.out.println("Errore nell'inserimento!");
+                done = false;
+            }
+        } while (!done);
+        done = false;
+        do {
+            try {
+                System.out.println("Inserisci il giorno di nascita: ");
+                gg = Integer.valueOf(tastiera.readLine());
+                System.out.println("Inserisci il mese di nascita: ");
+                mm = Integer.valueOf(tastiera.readLine());
+                System.out.println("Inserisci l'anno di nascita: ");
+                aa = Integer.valueOf(tastiera.readLine());
+                if(Persona.check18(mm, aa)) done = true;
+                else {
+                    System.out.println("Devi essere maggiorenne!");
+                    done=false;
+                }
+            } catch (IOException | NumberFormatException e) {
+                System.out.println("Errore nell'inserimento!");
+                done = false;
+            }
+        } while (!done);
+        Data dataNascita;
+        dataNascita = new Data(gg, mm, aa);
+        Persona p;
+        p = new Persona(nome, cognome, sex, comuneNascita, indirizzo, numTel, codFisc, dataNascita);
+        return p;
+    }
+
+    public static void stampaPersona(Persona p){
+        System.out.print("\nIntestatario: " + p.getNome() + " " + p.getCognome());
+        System.out.print("\nNato il: "+  p.dataNascita.getGg()+"/"+p.dataNascita.getMm() + "/" +p.dataNascita.getAaaa() + " A: " + p.getComuneNascita());
+        System.out.print("\nResidente in (via): " + p.getIndirizzo());
+        System.out.print("\nSesso: " + p.getSex());
+        System.out.print("\nNumero di telefono: " + p.getNumTel());
+        System.out.print("\nCodice Fiscale: " + p.getCodFisc());
+        
+    }
     public static void main(String[] args) {
         // 
         InputStreamReader input = new InputStreamReader(System.in);
@@ -130,6 +294,7 @@ public class Banca {
         boolean done = false;
         System.out.println("Conto 1:");
         c1 = new ContoCorrente(Banca.reqId());
+        c1.setIntestatario(Banca.reqPersona());
         do {
             try {
                 System.out.println("Inserisci il tipo di operazione che vuoi fare con il conto 1!");
@@ -168,8 +333,10 @@ public class Banca {
                     break;
             }
         } while (!done);
+        /*
         System.out.println("Conto 2:");
         c2 = new ContoConFido(Banca.reqId());
+        c2.setIntestatario(Banca.reqPersona());
         //Stessa cosa ma leggermente riadattata al fido
         do {
             try {
@@ -213,7 +380,7 @@ public class Banca {
                     break;
             }
         } while (!done);
-
+        */
         //Termino senza errori
         System.exit(0);
     }
